@@ -12,6 +12,7 @@ export default [
       'eslint.config.js',
       'prettier.config.js',
       'vite.config.ts',
+      '.commitlintrc.js',
     ],
   },
   ...tanstackConfig,
