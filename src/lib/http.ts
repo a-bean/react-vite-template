@@ -1,13 +1,14 @@
-import Axios, {
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type CustomParamsSerializer,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-  type Method,
-  type AxiosError,
-} from 'axios'
+import Axios from 'axios'
 import { stringify } from 'qs'
+import type {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CustomParamsSerializer,
+  InternalAxiosRequestConfig,
+  Method,
+} from 'axios'
 
 // 基础配置
 const defaultConfig: AxiosRequestConfig = {
@@ -103,12 +104,12 @@ class HttpClient {
       // 示例: 添加token
       // const token = localStorage.getItem('token');
       // if (token) {
-      //   config.headers.Authorization = `Bearer ${token}`;
+      //  config.headers.Authorization = `Bearer ${token}`;
       // }
 
       // 示例: 添加时间戳防止缓存
       // if (config.method?.toUpperCase() === 'GET') {
-      //   config.params = { ...config.params, _t: Date.now() };
+      //  config.params = { ...config.params, _t: Date.now() };
       // }
 
       return config
@@ -141,16 +142,16 @@ class HttpClient {
       // 示例: 处理不同的响应码 //
       // const { code, message } = response.data;
       // switch(code) {
-      //   case 200:
+      //  case 200:
       // return response.data;
-      //   case 401:
+      //  case 401:
       // 未授权处理
       //  break;
       // case 403:
       // 权限不足处理
       // break;
       // default:
-      /// 其他错误处理   console.error('请求错误:', message); // }
+      // / 其他错误处理  console.error('请求错误:', message); // }
 
       return response.data
     } // 默认响应错误拦截器
@@ -166,17 +167,17 @@ class HttpClient {
         return Promise.reject(new Error('请求已被取消'))
       } // 网络错误处理
 
-      if (!(error as AxiosError).response) {
+      if (!error.response) {
         if (
           (error as any).code === 'ECONNABORTED' ||
-          (error as AxiosError).message?.includes('timeout')
+          error.message.includes('timeout')
         ) {
           return Promise.reject(new Error('请求超时，请稍后重试'))
         }
         return Promise.reject(new Error('网络错误，请检查网络连接'))
       } // HTTP状态码错误处理
 
-      const status = (error as AxiosError).response?.status
+      const status = error.response.status
       const commonErrors: Record<number, string> = {
         400: '请求参数错误',
         401: '未授权，请重新登录',
@@ -190,8 +191,8 @@ class HttpClient {
       }
 
       const message =
-        status !== undefined && status in commonErrors
-          ? commonErrors[status as number]
+        status in commonErrors
+          ? commonErrors[status]
           : `请求失败（状态码：${status}）`
       return Promise.reject(new Error(message))
     } // 优先使用自定义拦截器，否则使用默认拦截器
@@ -275,7 +276,7 @@ class HttpClient {
   public cancelRequest(key: RequestKey, message?: string): boolean {
     const controller = this.abortControllers.get(key)
     if (controller) {
-      controller.abort(message || `取消请求: ${String(key)}`)
+      controller.abort(message || `取消请求:${String(key)}`)
       this.abortControllers.delete(key)
       return true
     }
@@ -288,7 +289,7 @@ class HttpClient {
    */
   public cancelAllRequests(message?: string): void {
     this.abortControllers.forEach((controller, key) => {
-      controller.abort(message || `取消所有请求: ${String(key)}`)
+      controller.abort(message || `取消所有请求:${String(key)}`)
     })
     this.abortControllers.clear()
   }
@@ -386,7 +387,7 @@ class HttpClient {
     /* 在这里写请求异常的通用处理逻辑 */
     // 示例: 统一错误提示
     // if (lastError instanceof Error) {
-    //   console.error('请求失败:', lastError.message);
+    //  console.error('请求失败:', lastError.message);
     // }
 
     return Promise.reject(lastError)
