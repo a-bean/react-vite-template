@@ -13,6 +13,7 @@ export default [
       'prettier.config.js',
       'vite.config.ts',
       '.commitlintrc.js',
+      '.husky',
     ],
   },
   ...tanstackConfig,
